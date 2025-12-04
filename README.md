@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+Esta es una aplicación React que consume la API de JSONPlaceholder para mostrar una lista de posts y sus detalles. El enfoque principal del proyecto es la implementación de custom hooks para abstraer y reutilizar la lógica de fetching de datos, eliminando código repetitivo.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Objetivos Alcanzados
+Implementación del custom hook useFetch como abstracción genérica para peticiones HTTP
+Creación del custom hook usePosts para manejo específico de la lista de posts
+Creación del custom hook usePostDetail para obtener detalles de un post individual
+Creación del custom hook useUsuario para obtener información del autor
+Eliminación de código duplicado en los componentes
+Mejora significativa en la mantenibilidad y reutilización del código
+Implementación de navegación con React Router
+Manejo robusto de estados: carga, error y éxito
 
-## Available Scripts
+src/
+├── hooks/
+│   ├── useFetch.js          # Hook genérico para peticiones HTTP
+│   └── usePosts.js          # Hooks específicos para posts y usuarios
+├── components/
+│   ├── ListaPosts.jsx       # Componente de lista de posts
+│   ├── ListaPosts.css
+│   ├── DetallePost.jsx      # Componente de detalle de post
+│   └── DetallePost.css
+├── App.jsx                   # Componente principal con routing
+├── App.css                   # Estilos globales
+└── index.js                  # Punto de entrada
 
-In the project directory, you can run:
 
-### `npm start`
+Custom Hooks Implementados
+1. useFetch (Hook Genérico)
+javascript
+const { data, cargando, error } = useFetch(url);
+Propósito: Abstraer la lógica común de peticiones HTTP
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Funcionalidad:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Maneja el ciclo completo de una petición: carga, éxito y error
 
-### `npm test`
+Reutilizable para cualquier endpoint
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Se actualiza automáticamente cuando la URL cambia
 
-### `npm run build`
+Estados retornados:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+data: Datos obtenidos de la API
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+cargando: Booleano que indica si está cargando
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+error: Mensaje de error si ocurre algún problema
 
-### `npm run eject`
+2. usePosts (Hook Específico)
+javascript
+const { posts, cargando, error } = usePosts();
+Propósito: Obtener la lista completa de posts
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Ventaja: Encapsula la URL de la API y proporciona una interfaz limpia
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. usePostDetail (Hook Específico)
+javascript
+const { post, cargando, error } = usePostDetail(postId);
+Propósito: Obtener el detalle de un post individual
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Ventaja: Acepta el ID como parámetro y construye la URL automáticamente
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. useUsuario (Hook Específico)
+javascript
+const { usuario, cargando, error } = useUsuario(userId);
+Propósito: Obtener información del autor de un post
 
-## Learn More
+Ventaja: Se integra perfectamente con usePostDetail
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Reflexión del Trabajo Realizado
+Aprendizajes Principales
 
-### Code Splitting
+Abstracción y Reutilización
+Antes de crear custom hooks, cada componente implementaba su propio proceso de fetch utilizando useState y useEffect, lo que generaba duplicación de código, más posibilidades de errores y mayor dificultad para dar mantenimiento. Con los custom hooks, esa lógica repetida se concentró en un solo lugar, reduciendo bloques de más de 15 líneas a una única llamada.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Composición de Hooks
+Los hooks pueden combinarse entre sí. usePosts, usePostDetail y useUsuario están construidos sobre useFetch, formando una arquitectura escalonada que separa claramente la lógica de negocio del manejo de datos.
 
-### Analyzing the Bundle Size
+Separación de Responsabilidades
+Los componentes ahora se dedican exclusivamente a la interfaz y a gestionar interacciones, mientras que los hooks contienen la lógica de negocio y las solicitudes a la API. Esto genera un código más ordenado, entendible y fácil de mantener.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Facilidad para el Testing
+Al trasladar la lógica a hooks independientes, es posible probarlos de forma aislada, simular respuestas de la API y crear tests más claros, específicos y sostenibles a largo plazo.
